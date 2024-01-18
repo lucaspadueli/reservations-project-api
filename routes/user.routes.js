@@ -24,7 +24,8 @@ router.get('/get-users', async(req,res)=>{
         res.status(500).json({description: "Erro ao solicitar usuários"})
     }
     
-   
 })
+
+
 
 module.exports = router;

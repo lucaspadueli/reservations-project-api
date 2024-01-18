@@ -13,8 +13,11 @@ require('./db');
 //rotas
 const userRoutes = require('./routes/user.routes');
 const reservationRoutes = require('./routes/reservation.routes');
+const roomsRoutes = require('./routes/rooms.routes');
 app.use(userRoutes);
 app.use(reservationRoutes);
+app.use(roomsRoutes);
+
 
 
 app.use((req,res)=>{
