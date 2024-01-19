@@ -14,6 +14,8 @@ require('./db');
 const userRoutes = require('./routes/user.routes');
 const reservationRoutes = require('./routes/reservation.routes');
 const roomsRoutes = require('./routes/rooms.routes');
+const authRoutes = require('./routes/auth.routes');
+app.use(authRoutes);
 app.use(userRoutes);
 app.use(reservationRoutes);
 app.use(roomsRoutes);
