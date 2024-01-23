@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const Room = require('../models/Room.model');
 const User = require('../models/User.model');
-
+const {isAdmin} = require('../middlewares/is-admin.middleware');
+const {isAuthenticated} = require('../middlewares/jwt.middleware');
 router.get('/rooms', async(req,res)=>{
     try {
         const roomsFromDb = await Room.find();
@@ -22,15 +23,11 @@ router.get('/rooms/:roomId', async(req,res)=>{
     }
 })
 
-router.put('/rooms/:roomId/:userId', async (req,res)=> {
-    const {roomId,userId} = req.params;
+router.put('/rooms/:roomId/',isAuthenticated, isAdmin, async (req,res,next)=> {
+    const {roomId} = req.params;
     const {name,capacity,description} = req.body;
     try {
         const roomFromDb = await Room.findById(roomId);
-        const user = await User.findById(userId);
-        if(user.role !== "Admin"){
-            return res.json("Apenas Admnistradores podem fazer alterações");
-        }
         await Room.findByIdAndUpdate(roomId,{name:name,capacity:capacity,description:description});
         res.status(200).json("Sala alterado com sucesso!");
     } catch (error) {

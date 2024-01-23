@@ -1,21 +1,26 @@
 const express = require('express');
 require('dotenv/config')
-const logger = require('morgan');
+
 
 
 const app = express();
 app.use(express.json());
-app.use(logger('dev'));
+
+require('./config')(app);
 //db
 require('./db');
 
+//middlewares
+const {isAuthenticated} = require('./middlewares/jwt.middleware');
 
 //rotas
 const userRoutes = require('./routes/user.routes');
 const reservationRoutes = require('./routes/reservation.routes');
 const roomsRoutes = require('./routes/rooms.routes');
 const authRoutes = require('./routes/auth.routes');
+
 app.use(authRoutes);
+//app.use(isAuthenticated);
 app.use(userRoutes);
 app.use(reservationRoutes);
 app.use(roomsRoutes);
