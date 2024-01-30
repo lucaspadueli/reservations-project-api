@@ -2,6 +2,7 @@ const router = require('express').Router();
 const User = require('../models/User.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const {isAuthenticated} = require("../middlewares/jwt.middleware");
 
 router.post('/signup', async (req,res) => {
     let {username,email,password,role} = req.body;
@@ -41,12 +42,12 @@ router.post('/login', async(req,res)=>{
        const user = await User.findOne({username});
        console.log(user);
        if(!user){
-        return res.json("usuario nao cadastrado")
+        return res.status(400).json({description: "usuario nao cadastrado"})
        }
        const passwordHash = user.password;
        const authentication = await bcrypt.compare(password,passwordHash);
        if(!authentication){
-        return res.status(400).json('Senha ou usuário incorretos');
+        return res.status(401).json({description:'Senha ou usuário incorretos!!'});
        }
        const payload = {
         _id: user._id,
@@ -60,6 +61,10 @@ router.post('/login', async(req,res)=>{
         res.status(400).json({description: "erro ao fazer o login"})
         console.error(error);
     }
+})
+
+router.get('/verify', isAuthenticated, (req,res)=>{
+    res.json(req.payload);
 })
 
 
